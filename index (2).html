@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anaconda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="topo">
+      <h3 class="titulo">Anaconda</h3>
+    </div>
+    <form id="convertForm">
+       <center><input placeholder="Digite o que procura aqui" type="text" id="url" name="url" required></center>
+        <center><button type="submit" class="but">Prosseguir</button></center>
+    </form>
+
+    <div id="message"></div>
+
+    <script src="converter.js">
+      const ytdl = require('ytdl-core');
+const fs = require('fs');
+
+document.getElementById('convertForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const url = document.getElementById('url').value;
+    const info = await ytdl.getInfo(url);
+    const title = info.videoDetails.title;
+
+    ytdl(url, { filter: 'audioonly' })
+        .pipe(fs.createWriteStream(`${title}.mp3`))
+        .on('finish', () => {
+            document.getElementById('message').innerText = `Sucesso na conversão "${title}" para MP3!`;
+        })
+        .on('error', (err) => {
+            document.getElementById('message').innerText = `Erro na conversão: ${err.message}`;
+        });
+});
+    </script>
+    <footer>
+      <center><p class="end">Anaconda</p></center>
+       <br>
+       <p class="dire">© [2024] [Anaconda]. Todos os direitos reservados. Este site é apenas um conversor de vídeos do YouTube para áudio MP3 e não armazena nenhum conteúdo protegido por direitos autorais. Certifique-se de possuir os direitos autorais necessários antes de converter qualquer vídeo.</p>
+       <center><p class="loca">Brasil, Rio de Janeiro</p></center>
+    </footer>
+</body>
+</html>
